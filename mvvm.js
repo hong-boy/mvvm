@@ -314,6 +314,11 @@ var Compiler = (function () {
             });
         },
         _processModel4Checkbox: function(vm, node, exp, val){
+            if (!Array.isArray(val)) {
+                // 若传入的val不为数组类型时，则转换
+                val = !!val ? [].concat(val) : [];
+                this._setVMVal(vm, exp, val);
+            }
             node.addEventListener('change', function(e){
                 var el = e.target,
                     newValue = e.target.value,
