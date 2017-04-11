@@ -143,7 +143,7 @@ var MVVM = (function () {
         };
     })();
     var Compiler = (function () {
-        var REG_TEXT = /\{\{(.*)\}\}/;
+        var REG_TEXT = /\{\{\{(.*)\}\}\}/;
 
         function Compile(el, vm) {
             this.$vm = vm;
@@ -194,7 +194,9 @@ var MVVM = (function () {
                             dir = attrName.substring(2);
                         if (thiz.isEventDirective(dir)) {
                             compileUtil.eventHandler(node, thiz.$vm, exp, dir);
-                        } else {
+                        } else if(thiz.isVForDirective(dir)){
+                            compileUtil.vfor(node, thiz.$vm, exp);
+                        } else{
                             compileUtil[dir] && compileUtil[dir](node, thiz.$vm, exp);
                         }
                         node.removeAttribute(attrName);
@@ -216,6 +218,9 @@ var MVVM = (function () {
             isEventDirective: function (attr) {
                 return attr.indexOf('on') === 0;
             },
+            isVForDirective: function (attr) {
+                return attr.indexOf('for') === 0;
+            }
         };
 
         var compileUtil = {
@@ -248,6 +253,38 @@ var MVVM = (function () {
                 var thiz = this,
                     val = thiz._getVMVal(vm, exp);
                 thiz._dispatchEvent(vm, node, exp, val);
+            },
+            vfor: function (node, vm, exp) {
+                node.removeAttribute('v-for');
+                var forcodeRE = /(.*?)\s+(?:in)\s+(.*)/, // v-for="aaa in list"
+                    localcodeRE = /\{-(.*)\}/,// {-aaa.ccc}
+                    propcodeRE = /\s+:(.+)="(.+)"\s*/,// :value="aaa.bbb"
+                    inMatches = exp.match(forcodeRE),
+                    outerHTML = node.outerHTML,
+                    parentNode = node.parentNode,
+                    alias = inMatches[1],
+                    prop = inMatches[2];
+                outerHTML = outerHTML.replace(localcodeRE, function(match, code){
+                    return "'+(" + code + ")+'";
+                }).replace(propcodeRE, function(match, prop, code){
+                    return " " + prop+"='+("+ code + ")+' ";
+                });
+                // 构造function
+                var fnBody = [];
+                fnBody.push('var temp = [];');
+                fnBody.push('' + (prop) + '.forEach(function('+(alias)+'){');// forEach - START
+                fnBody.push('temp.push(\''+(outerHTML)+'\');');
+                fnBody.push('});');// forEach - END
+                fnBody.push('return temp.join("");');
+                var fn = new Function(prop, fnBody.join('\n'));
+                //var innterHTML = fn(vm[prop]);
+                //parentNode.innerHTML = innterHTML;
+                node.remove();
+                var updaterFn = updater['vforUpdater'];
+                updaterFn && updaterFn(parentNode, fn, this._getVMVal(vm, prop));
+                new Watcher(vm, prop, function(newValue, oldValue){
+                    updaterFn && updaterFn(parentNode, fn, newValue, oldValue);
+                });
             },
             _dispatchEvent: function (vm, node, exp, val) {
                 var thiz = this,
@@ -391,6 +428,9 @@ var MVVM = (function () {
                         break;
                     }
                 }
+            },
+            vforUpdater: function (parentNode, fn, value, oldValue) {
+                parentNode.innerHTML = fn(value);
             },
             classUpdater: function (node, value, oldValue) {
                 var className = node.className;

@@ -9,6 +9,8 @@
         }
     </style>
     <script type="text/javascript" src="mvvm.js"></script>
+    <!--<script src="//cdn.bootcss.com/vue/2.2.6/vue.common.min.js"></script>-->
+    <!--<script src="//cdn.bootcss.com/vue/2.2.6/vue.runtime.min.js"></script>-->
 </head>
 <body>
     <div id="demo">
@@ -28,21 +30,26 @@
                 <option value="cq">重庆</option>
                 <option value="cd">成都</option>
             </select>
-            <p>You picked: <span>{{province}}</span></p>
+            <p>You picked: <span>{{{province}}}</span></p>
         </p>
         <p>
             <input type="checkbox" id="soccerid" value="soccer" v-model="hobbits">
             <label for="soccerid">足球</label>
             <input type="checkbox" id="runningid" value="running" v-model="hobbits">
             <label for="runningid">跑步</label>
-            <p>You picked: <span>{{hobbits}}</span></p>
+            <p>You picked: <span>{{{hobbits}}}</span></p>
         </p>
         <p>
             <input type="radio" id="maleid" value="male" v-model="gender">
             <label for="maleid">男</label>
             <input type="radio" id="femaleid" value="female" v-model="gender">
             <label for="femaleid">女</label>
-            <p>You picked: <span>{{gender}}</span></p>
+            <p>You picked: <span>{{{gender}}}</span></p>
+        </p>
+        <p>
+            <select v-model="currCity">
+                <option v-for="city in cityList" :value="city.code">{-city.label}</option>
+            </select>
         </p>
     </div>
 </body>
@@ -59,7 +66,10 @@
             gender: 'male',
             user: {
                 name: 'Juven'
-            }
+            },
+            cityList: [
+                {label:'test label', code:22}
+            ]
         },
         methods: {
             showAlert: function(){

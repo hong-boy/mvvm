@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+<body>
+
+</body>
+<script type="text/javascript">
+    function init(){
+        var promise = $.Deferred();
+        setTimeout(function(){
+            console.log('first');
+            promise.resolve(1,2);
+        }, 1000);
+        return promise;
+    }
+    $.when(init())
+     .then(function(args1, args2){
+         console.log('second: ', args1, args2);
+         var promise = $.Deferred();
+         setTimeout(function(){
+             promise.resolve(3);
+         }, 1000);
+         return promise;
+     })
+     .then(function(args){
+         var promise = $.Deferred();
+         setTimeout(function(){
+             try{
+                 console.log('third: ', args);
+//                 throw 'err';
+                 promise.resolve(4);
+             }catch(e){
+                 promise.reject(41);
+             }
+         }, 1000);
+         return promise;
+     })
+     .then(function(args){
+         var promise = $.Deferred();
+         setTimeout(function(){
+             console.log('forth: ', args);
+             promise.resolve(5);
+         }, 1000);
+         return promise;
+     })
+     .fail(function(args){
+         console.log('fail: ', args);
+     });
+</script>
+</html>
