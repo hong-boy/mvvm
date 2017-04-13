@@ -8,6 +8,7 @@
             font-weight: bold;
         }
     </style>
+    <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript" src="mvvm.js"></script>
     <!--<script src="//cdn.bootcss.com/vue/2.2.6/vue.common.min.js"></script>-->
     <!--<script src="//cdn.bootcss.com/vue/2.2.6/vue.runtime.min.js"></script>-->
@@ -18,7 +19,7 @@
             <textarea v-model="desc"></textarea>
         </p>
         <p>
-            <input type="text" v-model="user.name"/>
+            <input type="text" id="test" v-model="user.name"/>
         </p>
         <p v-class="clazzName" v-html="descHtml"></p>
         <p v-text="descText"></p>

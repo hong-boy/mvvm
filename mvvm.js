@@ -507,6 +507,9 @@ var MVVM = (function () {
         }
 
         MVVM.prototype = {
+            $watch: function(key, cb){
+                new Watcher(this, key, cb);
+            },
             _proxy: function (key) {
                 var thiz = this;
                 Object.defineProperty(thiz, key, {

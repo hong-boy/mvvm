@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>DEMO - test</title>
+    <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="mvvm.js"></script>
+</head>
+<body>
+
+</body>
+<script type="text/javascript">
+    var $vdom = $([
+            '<div id="test">',
+            '<input type="text" class="form-control validate[required]" name="source_name" id="source_name" maxlength="60" v-model="name">',
+            '</div>'
+    ].join(''));
+    var data = JSON.parse(
+            '{"propId":"sourcee1aaebb88ff64ef48fb42cffa6d21142","type":1,"source":"","name":"环境监控","stream":"env_monitor","nid":"14E8DE02-76AE-4D86-87C3-2FE579051498"}'
+    );
+    var vm = new MVVM({
+        el: $vdom.get(0),
+        data: data
+    });
+
+</script>
+</html>
