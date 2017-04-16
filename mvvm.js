@@ -419,7 +419,7 @@ var MVVM = (function () {
                     }
                     case 'radio':
                     {
-                        node.checked = (value === node.value);
+                        node.checked = (value == node.value);
                         break;
                     }
                     default:

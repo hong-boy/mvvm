@@ -41,9 +41,9 @@
             <p>You picked: <span>{{{hobbits}}}</span></p>
         </p>
         <p>
-            <input type="radio" id="maleid" value="male" v-model="gender">
+            <input type="radio" id="maleid" value="1" v-model="gender">
             <label for="maleid">男</label>
-            <input type="radio" id="femaleid" value="female" v-model="gender">
+            <input type="radio" id="femaleid" value="0" v-model="gender">
             <label for="femaleid">女</label>
             <p>You picked: <span>{{{gender}}}</span></p>
         </p>
@@ -64,7 +64,7 @@
             descHtml: "<span>It's HTML</span>",
             province: 'cq',
             hobbits: '',
-            gender: 'male',
+            gender: 1,
             user: {
                 name: 'Juven'
             },
